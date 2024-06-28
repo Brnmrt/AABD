@@ -1,0 +1,177 @@
+CREATE TABLE armazem (
+    id_armazem       VARCHAR2(20),
+    morada           VARCHAR2(200) NOT NULL,
+    cod_postal       CHAR(8) NOT NULL,
+    capacidade_disp  NUMBER(38) NOT NULL,
+    capacidade_max   NUMBER(38) NOT NULL,
+    PRIMARY KEY(id_armazem)
+);
+
+CREATE TABLE viagem (
+    id_viagem            VARCHAR2(20),
+    data_hora_inicio     DATE NOT NULL,
+    data_hora_fim        DATE NOT NULL,
+    estado               VARCHAR2(30) NOT NULL,
+    distancia            NUMBER(8) NOT NULL,
+    pontual              NUMBER(1) NOT NULL,
+    data_horap_inicio    DATE NOT NULL,
+    data_horap_fim       DATE NOT NULL,
+    n_pedidos            INTEGER NOT NULL,
+    volume_ocupado       NUMBER(8) NOT NULL,
+    regular              NUMBER(1) NOT NULL,
+    rota_id_rota         VARCHAR2(512) NOT NULL,
+    troco_id_troco       VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(id_viagem)
+);
+
+CREATE TABLE veiculo (
+    id_veiculo           VARCHAR2(20),
+    matricula            VARCHAR2(6) NOT NULL,
+    ano                  INTEGER NOT NULL,
+    marca                VARCHAR2(30) NOT NULL,
+    especial             NUMBER(1) NOT NULL,
+    tipo                 VARCHAR2(50) NOT NULL,
+    modelo               VARCHAR2(20) NOT NULL,
+    peso_merc_max        NUMBER(8) NOT NULL,
+    volume_merc_max      NUMBER(8) NOT NULL,
+    PRIMARY KEY(id_veiculo)
+);
+
+CREATE TABLE cliente (
+    id_cliente           INTEGER,
+    nif                  VARCHAR2(9) NOT NULL,
+    nome                 VARCHAR2(100) NOT NULL,
+    morada               VARCHAR2(200) NOT NULL,
+    telefone             VARCHAR2(20) NOT NULL,
+    email                VARCHAR2(100),
+    PRIMARY KEY(id_cliente)
+);
+
+CREATE TABLE troco (
+    id_troco             VARCHAR2(20),
+    origem               VARCHAR2(30) NOT NULL,
+    destino              VARCHAR2(30) NOT NULL,
+    distancia            NUMBER(8) NOT NULL,
+    duracao_media        NUMBER(8) NOT NULL,
+    duracao_max          NUMBER(8) NOT NULL,
+    rota_id_rota         VARCHAR2(512) NOT NULL,
+    armazem_id1          VARCHAR2(20) NOT NULL,
+    armazem_id2          VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(id_troco)
+);
+
+CREATE TABLE servico (
+    id_servico           VARCHAR2(20),
+    preco_km             NUMBER(8) NOT NULL,
+    duracao_max          NUMBER(8) NOT NULL,
+    PRIMARY KEY(id_servico)
+);
+
+CREATE TABLE motorista (
+    id_motorista         VARCHAR2(20),
+    nome                 VARCHAR2(100) NOT NULL,
+    nif                  VARCHAR2(512) NOT NULL,
+    n_ss                 VARCHAR2(20) NOT NULL,
+    n_cc                 VARCHAR2(20) NOT NULL,
+    n_sns                VARCHAR2(20) NOT NULL,
+    salario              NUMBER(8) NOT NULL,
+    morada               VARCHAR2(200) NOT NULL,
+    telefone             VARCHAR2(9) NOT NULL
+);
+
+CREATE TABLE tipo_merc_estado_ped (
+    id_tipo_merc         VARCHAR2(20),
+    fragil               NUMBER(1) NOT NULL,
+    especial             NUMBER(1) NOT NULL,
+    perigoso             NUMBER(1) NOT NULL,
+    estado_id_estado     VARCHAR2(20) NOT NULL,
+    estado_descricao     VARCHAR2(100) NOT NULL,
+    estado_data_inicio   DATE NOT NULL,
+    estado_data_fim      DATE NOT NULL,
+    estado_id_pedido     VARCHAR2(20) NOT NULL,
+    estado_data_reg      DATE NOT NULL,
+    estado_data_entrega  DATE NOT NULL,
+    estado_prazo_max     DATE NOT NULL,
+    estado_remetente     VARCHAR2(200) NOT NULL,
+    estado_destinatario  VARCHAR2(200) NOT NULL,
+    estado_peso          NUMBER(8) NOT NULL,
+    estado_volume        NUMBER(8) NOT NULL,
+    estado_custo         NUMBER(8) NOT NULL,
+    PRIMARY KEY(id_tipo_merc)
+);
+
+CREATE TABLE rota (
+    id_rota              VARCHAR2(30),
+    data_inicio          DATE NOT NULL,
+    data_fim             DATE NOT NULL,
+    dia_hora             VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(id_rota)
+);
+
+CREATE TABLE tipo_merc_estado_ped_arm (
+    tipo_merc_id         VARCHAR2(20),
+    armazem_id           VARCHAR2(20),
+    PRIMARY KEY(tipo_merc_id,armazem_id)
+);
+
+CREATE TABLE tipo_merc_estado_ped_arm_1 (
+    tipo_merc_id         VARCHAR2(20),
+    armazem_id           VARCHAR2(20),
+    PRIMARY KEY(tipo_merc_id,armazem_id)
+);
+
+CREATE TABLE veiculo_armazem (
+    veiculo_id           VARCHAR2(20),
+    armazem_id           VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(veiculo_id)
+);
+
+CREATE TABLE veiculo_tipo_merc_est_ped (
+    veiculo_id           VARCHAR2(20),
+    tipo_merc_id         VARCHAR2(20),
+    PRIMARY KEY(veiculo_id,tipo_merc_id)
+);
+
+CREATE TABLE motorista_veiculo (
+    veiculo_id           VARCHAR2(20),
+    PRIMARY KEY(veiculo_id)
+);
+
+CREATE TABLE servico_tipo_merc_est_ped (
+    servico_id           VARCHAR2(20) NOT NULL,
+    tipo_merc_id         VARCHAR2(20),
+    PRIMARY KEY(tipo_merc_id)
+);
+
+CREATE TABLE viagem_veiculo (
+    viagem_id            VARCHAR2(20),
+    veiculo_id           VARCHAR2(20) NOT NULL,
+    PRIMARY KEY(viagem_id)
+);
+
+CREATE TABLE tipo_merc_estado_ped_viagem (
+    tipo_merc_id         VARCHAR2(20),
+    viagem_id            VARCHAR2(20),
+    PRIMARY KEY(tipo_merc_id,viagem_id)
+);
+
+CREATE TABLE cliente_tipo_merc_est_ped (
+    cliente_id           INTEGER NOT NULL,
+    tipo_merc_id         VARCHAR2(20),
+    PRIMARY KEY(cliente_id,tipo_merc_id)
+);
+
+ALTER TABLE viagem ADD CONSTRAINT fk_viagem_rota FOREIGN KEY (rota_id_rota) REFERENCES rota(id_rota);
+ALTER TABLE viagem ADD CONSTRAINT fk_viagem_troco FOREIGN KEY (troco_id_troco) REFERENCES troco(id_troco);
+ALTER TABLE troco ADD CONSTRAINT fk_troco_rota FOREIGN KEY (rota_id_rota) REFERENCES rota(id_rota);
+ALTER TABLE troco ADD CONSTRAINT fk_troco_armazem1 FOREIGN KEY (armazem_id1) REFERENCES armazem(id_armazem);
+ALTER TABLE troco ADD CONSTRAINT fk_troco_armazem2 FOREIGN KEY (armazem_id2) REFERENCES armazem(id_armazem);
+ALTER TABLE tipo_merc_estado_ped_arm ADD CONSTRAINT fk_tme_armazem FOREIGN KEY (armazem_id) REFERENCES armazem(id_armazem);
+ALTER TABLE tipo_merc_estado_ped_arm_1 ADD CONSTRAINT fk_tme_armazem_1 FOREIGN KEY (armazem_id) REFERENCES armazem(id_armazem);
+ALTER TABLE veiculo_armazem ADD CONSTRAINT fk_veic_armazem FOREIGN KEY (armazem_id) REFERENCES armazem(id_armazem);
+ALTER TABLE veiculo_tipo_merc_est_ped ADD CONSTRAINT fk_veic_tme_ped FOREIGN KEY (tipo_merc_id) REFERENCES tipo_merc_estado_ped(id_tipo_merc);
+ALTER TABLE motorista_veiculo ADD CONSTRAINT fk_mot_veic FOREIGN KEY (veiculo_id) REFERENCES veiculo(id_veiculo);
+ALTER TABLE servico_tipo_merc_est_ped ADD CONSTRAINT fk_serv_tme_ped FOREIGN KEY (tipo_merc_id) REFERENCES tipo_merc_estado_ped(id_tipo_merc);
+ALTER TABLE viagem_veiculo ADD CONSTRAINT fk_vg_veic FOREIGN KEY (veiculo_id) REFERENCES veiculo(id_veiculo);
+ALTER TABLE tipo_merc_estado_ped_viagem ADD CONSTRAINT fk_tme_viagem FOREIGN KEY (viagem_id) REFERENCES viagem(id_viagem);
+ALTER TABLE cliente_tipo_merc_est_ped ADD CONSTRAINT fk_cli_tme_ped FOREIGN KEY (tipo_merc_id) REFERENCES tipo_merc_estado_ped(id_tipo_merc);
