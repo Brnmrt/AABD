@@ -37,13 +37,6 @@ The system is designed to support the operational and management needs of a logi
 
 The database is designed following the Entity-Relationship (ER) model, normalized to ensure data integrity and minimize redundancy. The schema includes tables for managing key entities such as `Cliente` (Customer), `Pedido` (Order), `Veiculo` (Vehicle), `Viagem` (Trip), `Armazem` (Warehouse), and `Motorista` (Driver).
 
-**(Opcional: Pode adicionar aqui uma das imagens do seu diagrama de base de dados para uma melhor visualização)**
-*Conceptual Model:*
-![Conceptual Diagram](brnmrt/aabd/AABD-d4c88e54bbe1d11d4ff9b608d30122ef11fafb96/Meta1/Conceptual.jpg)
-
-*Physical Model:*
-![Physical Diagram](brnmrt/aabd/AABD-d4c88e54bbe1d11d4ff9b608d30122ef11fafb96/Meta2/Modelo_Fisico_G23.pdf)
-
 ## Key Technical Implementations
 
 This project highlights proficiency in advanced Oracle database features:
